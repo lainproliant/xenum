@@ -28,11 +28,14 @@ class Xenum(EqualityMixin):
         self.name = name
         self.value = value
     
-    def value(self):
-        return self.value
-
     def __str__(self):
         return '%s.%s' % (self.typename, self.name)
+    
+    def __repr__(self):
+        return '%s.%s=%s' % (self.typename, self.name, repr(self.value))
+    
+    def __hash__(self):
+        return hash(repr(self))
 
 #--------------------------------------------------------------------
 def xenum(clazz):
