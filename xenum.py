@@ -28,6 +28,9 @@ class Xenum(EqualityMixin):
         self.typename = typename
         self.name = name
         self.value = value
+
+    def __call__(self):
+        return self.value
     
     def __str__(self):
         return '%s.%s' % (self.typename, self.name)
@@ -38,6 +41,19 @@ class Xenum(EqualityMixin):
     def __hash__(self):
         return hash(repr(self))
 
+#--------------------------------------------------------------------
+class XenumDeferredCtor:
+    def __init__(self, *args, **kwargs):
+        self.args = args
+        self.kwargs = kwargs
+
+    def construct(self, clazz):
+        return clazz(*self.args, **self.kwargs)
+
+#--------------------------------------------------------------------
+def ctor(*args, **kwargs):
+    return XenumDeferredCtor(*args, **kwargs)
+     
 #--------------------------------------------------------------------
 def xenum(clazz):
     """
@@ -50,7 +66,11 @@ def xenum(clazz):
 
     xenum_map = collections.OrderedDict()
     for attr in class_attrs:
-        xenum_instance = Xenum(clazz.__name__, attr, getattr(clazz, attr))
+        value = getattr(clazz, attr)
+        if isinstance(value, XenumDeferredCtor):
+            value = value.construct(clazz)
+
+        xenum_instance = Xenum(clazz.__name__, attr, value)
         xenum_map['%s.%s' % (clazz.__name__, attr)] = xenum_instance
         setattr(clazz, attr, xenum_instance)
 

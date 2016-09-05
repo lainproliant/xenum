@@ -94,6 +94,24 @@ class XenumTests(unittest.TestCase):
             Alphabet.Y,
             Alphabet.Z])
 
+    def test_selftyped_enum(self):
+        @xenum
+        class Action:
+            INSERT = ctor('insert')
+            UPDATE = ctor('update')
+            DELETE = ctor('delete')
+
+            def __init__(self, name):
+                self.name = name
+
+        self.assertIsInstance(Action.INSERT.value, Action)
+        self.assertIsInstance(Action.UPDATE.value, Action)
+        self.assertIsInstance(Action.DELETE.value, Action)
+
+        self.assertEqual(Action.INSERT.value.name, 'insert')
+        self.assertEqual(Action.UPDATE.value.name, 'update')
+        self.assertEqual(Action.DELETE.value.name, 'delete')
+
 #--------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()

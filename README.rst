@@ -29,26 +29,30 @@ Example
 -------
 ::
 
-    from xenum import xenum
+    from xenum import xenum, ctor
 
     @xenum
-    class Colors:
-      RED = 1
-      GREEN = 2
-      BLUE = 3
+    class Actions:
+      INSERT = ctor('insert')
+      UPDATE = ctor('update')
+      DELETE = ctor('delete')
 
-    # convert to a string
-    str_value = str(Colors.RED)
-    # convert from a string
-    enum_value = Colors.by_name(str_value)
-    
-    if Colors.RED == enum_value:
-      print('We did it!')
+      def __init__(self, name):
+         self.name = name
+     
+    assert Actions.INSERT == Actions.by_name('Actions.INSERT')
+    assert Actions.INSERT().name == 'insert'
 
 Checkout ``test.py`` in the git repo for more usage examples.
 
 Change Log
 ----------
+
+Version 1.3: September 4th, 2016
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Add 'xenum.ctor()' allowing enum values to be instances of the
+  @xenum annotated class.
+- Made Xenum instances callable, returning the enum's internal value.
 
 Version 1.2: September 4th, 2016
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
