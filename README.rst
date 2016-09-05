@@ -50,6 +50,11 @@ Checkout ``test.py`` in the git repo for more usage examples.
 Change Log
 ----------
 
+Version 1.2: September 4th, 2016
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Add 'values()' method to @xenum annotated classes for fetching
+  an ordered sequence of the Xenum entities created.
+
 Version 1.1: August 31st, 2016
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - Made Xenum instances hashable, removed value() as a function.

@@ -8,6 +8,7 @@
 # Released under a 3-clause BSD license, see LICENSE for more info.
 #--------------------------------------------------------------------
 import inspect
+import collections
 
 #--------------------------------------------------------------------
 class EqualityMixin:
@@ -47,7 +48,7 @@ def xenum(clazz):
     class_attrs = inspect.getmembers(clazz, lambda attr: not inspect.isroutine(attr))
     class_attrs = [a[0] for a in class_attrs if not a[0].startswith('__') and not a[0].endswith('__')]
 
-    xenum_map = {}
+    xenum_map = collections.OrderedDict()
     for attr in class_attrs:
         xenum_instance = Xenum(clazz.__name__, attr, getattr(clazz, attr))
         xenum_map['%s.%s' % (clazz.__name__, attr)] = xenum_instance
@@ -58,7 +59,11 @@ def xenum(clazz):
             raise ValueError('Enum "%s" has no member "%s"' % (clazz.__name__, name))
         return xenum_map[name]
 
+    def values():
+        return xenum_map.values()
+
     setattr(clazz, 'by_name', by_name)
+    setattr(clazz, 'values', values)
 
     return clazz
 
