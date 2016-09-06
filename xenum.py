@@ -43,6 +43,10 @@ class Xenum(EqualityMixin):
 
 #--------------------------------------------------------------------
 class XenumDeferredCtor:
+    """
+    Class used to indicate that value should be an instance
+    of the annotated class.
+    """
     def __init__(self, *args, **kwargs):
         self.args = args
         self.kwargs = kwargs
@@ -51,9 +55,32 @@ class XenumDeferredCtor:
         return clazz(*self.args, **self.kwargs)
 
 #--------------------------------------------------------------------
+class XenumSelfReferentialDeferredCtor(XenumDeferredCtor):
+    """
+    Class used to indicate that value should be an instance
+    of the annotated class, whos constructor is passed the
+    Xenum instance for self reference.
+    """
+    def construct(self, clazz, xenum_instance):
+        return clazz(*((xenum_instance,) + self.args), **self.kwargs)
+
+#--------------------------------------------------------------------
 def ctor(*args, **kwargs):
+    """
+    Indicates that an enum value should be an instance of the
+    annotated class.
+    """
     return XenumDeferredCtor(*args, **kwargs)
      
+#--------------------------------------------------------------------
+def sref(*args, **kwargs):
+    """
+    Indicates that an enum value should be an instance of the
+    annotated class, whos constructor is passed the Xenum
+    instance for self reference.
+    """
+    return XenumSelfReferentialDeferredCtor(*args, **kwargs)
+
 #--------------------------------------------------------------------
 def xenum(clazz):
     """
@@ -67,8 +94,14 @@ def xenum(clazz):
     xenum_map = collections.OrderedDict()
     for attr in class_attrs:
         value = getattr(clazz, attr)
-        if isinstance(value, XenumDeferredCtor):
+        xenum_instance = None
+        if isinstance(value, XenumSelfReferentialDeferredCtor):
+            xenum_instance = Xenum(clazz.__name__, attr, None)
+            value = value.construct(clazz, xenum_instance)
+            xenum_instance.value = value
+        elif isinstance(value, XenumDeferredCtor):
             value = value.construct(clazz)
+            xenum_instance = Xenum(clazz.__name__, attr, value)
 
         xenum_instance = Xenum(clazz.__name__, attr, value)
         xenum_map['%s.%s' % (clazz.__name__, attr)] = xenum_instance

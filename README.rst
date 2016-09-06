@@ -48,6 +48,12 @@ Checkout ``test.py`` in the git repo for more usage examples.
 Change Log
 ----------
 
+Version 1.4: September 5th, 2016
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Add 'xenum.sref()' allowing enum values to be instances of the
+  @xenum annotated class, whos `*args` is prepended with the 
+  Xenum instance itself for self-reference.
+
 Version 1.3: September 4th, 2016
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - Add 'xenum.ctor()' allowing enum values to be instances of the

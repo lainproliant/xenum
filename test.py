@@ -112,6 +112,24 @@ class XenumTests(unittest.TestCase):
         self.assertEqual(Action.UPDATE.value.name, 'update')
         self.assertEqual(Action.DELETE.value.name, 'delete')
 
+    def test_selftyped_selfreferential_enum(self):
+        @xenum
+        class Action:
+            INSERT = sref()
+            UPDATE = sref()
+            DELETE = sref()
+
+            def __init__(self, enum):
+                self.enum = enum
+
+        self.assertIsInstance(Action.INSERT.value, Action)
+        self.assertIsInstance(Action.UPDATE.value, Action)
+        self.assertIsInstance(Action.DELETE.value, Action)
+
+        self.assertEqual(Action.INSERT.value.enum, Action.INSERT)
+        self.assertEqual(Action.UPDATE.value.enum, Action.UPDATE)
+        self.assertEqual(Action.DELETE.value.enum, Action.DELETE)
+
 #--------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
