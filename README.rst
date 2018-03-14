@@ -1,6 +1,8 @@
 Xenum: A simple alternative to Python 3 Enums.
 ==============================================
 
+|Build Status|
+
 Xenum offers a simple alternative to Python 3 enums that's
 especially useful for (de)serialization.  When you would like
 to model your enum values so that they survive jumps to and
@@ -69,3 +71,5 @@ Version 1.1: August 31st, 2016
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - Made Xenum instances hashable, removed value() as a function.
 
+.. |Build Status| image:: https://travis-ci.org/lainproliant/xeno.svg?branch=master
+   :target: https://travis-ci.org/lainproliant/xeno
